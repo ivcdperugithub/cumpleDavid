@@ -74,11 +74,14 @@
     }
 
     #modal-video video {
-      max-height: 90vh;
-      max-width: 90vw;
+      width: 90vw;            /* Toma el 90% del ancho de la pantalla */
+      height: auto;           /* Altura automática proporcional */
+      max-height: 90vh;       /* Nunca excede el alto de la pantalla */
       background: black;
       border: 2px solid white;
+      border-radius: 10px;
     }
+
 
     #modal-video button {
       margin-top: 15px;
