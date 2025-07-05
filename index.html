@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Feliz Cumpleaños</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('img/fondo.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100vh;
+      width: 100vw;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+
+    .mensaje-cumple {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 48px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+      text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff1a1a, 0 0 30px #ff1a1a;
+      animation: brillo 1.5s infinite alternate;
+      padding: 10px 20px;
+      border: 2px solid #ff3333;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #ff3333;
+      background-color: rgba(0, 0, 0, 0.3);
+      z-index: 999;
+    }
+
+    @keyframes brillo {
+      0% {
+        text-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff1a1a;
+        box-shadow: 0 0 10px #ff4d4d;
+        border-color: #ff4d4d;
+      }
+      100% {
+        text-shadow: 0 0 20px #ffffff, 0 0 30px #ff0000;
+        box-shadow: 0 0 25px #ff0000;
+        border-color: #ff0000;
+      }
+    }
+
+    img.fruta {
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    img.fruta:hover {
+      transform: translateY(15px);
+    }
+
+    #modal-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    #modal-video video {
+      max-height: 90vh;
+      max-width: 90vw;
+      background: black;
+      border: 2px solid white;
+    }
+
+    #modal-video button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🎈 Texto de cumpleaños -->
+  <div class="mensaje-cumple">¡Feliz Cumpleaños, DAVID!</div>
+
+  <!-- 🍎 Manzanas de distintos tamaños -->
+  <img class="fruta" src="img/manzana.png" data-video="videos/s1.mp4" style="top: 150px; left: 320px; width: 60px;">
+  <img class="fruta" src="img/manzana.png" data-video="videos/s2.mp4" style="top: 250px; left: 820px; width: 45px;">
+  <img class="fruta" src="img/manzana.png" data-video="videos/s3.mp4" style="top: 180px; left: 1080px; width: 75px;">
+  <img class="fruta" src="img/manzana.png" data-video="videos/s4.mp4" style="top: 480px; left: 1080px; width: 50px;">
+
+  <!-- 🎥 Modal para reproducir video -->
+  <div id="modal-video">
+    <video controls autoplay></video>
+    <button onclick="cerrarModal()">Cerrar</button>
+  </div>
+
+  <!-- 🎵 Música de fondo -->
+  <audio id="musica-fondo" src="audio/fondo.mp3" autoplay loop></audio>
+
+<script>
+  let musica;
+  let musicaTiempo = 0;
+
+  document.addEventListener("DOMContentLoaded", function () {
+    musica = document.getElementById('musica-fondo');
+    musica.volume = 0.3;
+
+    // Permitir que el usuario active la música si fue bloqueada por el navegador
+    document.body.addEventListener('click', () => {
+      if (musica.paused) musica.play();
+    });
+
+    // 🍎 Click en manzana: pausar música y reproducir video
+    document.querySelectorAll('.fruta').forEach(fruta => {
+      fruta.addEventListener('click', () => {
+        const videoSrc = fruta.getAttribute('data-video');
+        const modal = document.getElementById('modal-video');
+        const video = modal.querySelector('video');
+
+        // Guarda el tiempo actual antes de pausar
+        musicaTiempo = musica.currentTime;
+        musica.pause();
+
+        video.src = videoSrc;
+        modal.style.display = 'flex';
+        video.play();
+      });
+    });
+  });
+
+  // ❌ Cerrar modal y reanudar música desde donde quedó
+  function cerrarModal() {
+    const modal = document.getElementById('modal-video');
+    const video = modal.querySelector('video');
+
+    video.pause();
+    video.currentTime = 0;
+    video.src = '';
+    modal.style.display = 'none';
+
+    // Reanudar música desde donde quedó
+    musica.currentTime = musicaTiempo;
+    musica.play();
+  }
+</script>
+
+
+
+</body>
+</html>
